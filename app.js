@@ -6,6 +6,12 @@ const morgan = require('morgan');
 const session = require('express-session');
 const dotenv = require('dotenv');
 const nunjucks = require('nunjucks');
+const CookieParser = require('cookie-parser');
+
+const loginRouter = require('./routes/login');
+const logoutRouter = require('./routes/logout');
+const joinRouter = require('./routes/join');
+const mainRouter = require('./routes/main');
 
 dotenv.config();
 
@@ -16,7 +22,7 @@ nunjucks.configure({
     express: app,
     watch: true
 })
-app.use('morgan', 'dev');
+app.set('morgan', 'dev');
 app.use('/', express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
@@ -31,3 +37,12 @@ app.use(session({
     },
     name: 'session-cookie'
 }));
+
+app.use('/login', loginRouter);
+app.use('/logout', logoutRouter);
+app.use('/join', joinRouter);
+app.use('/:nickname', mainRouter);
+
+app.listen(app.get('port'), () => {
+    console.log(app.get('port'), '번 포트에서 대기중');
+});
