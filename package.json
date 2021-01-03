@@ -1,0 +1,30 @@
+{
+  "name": "rollingpaper",
+  "version": "0.0.1",
+  "description": "온라인 롤링페이퍼 서비스",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nittre/rollingpaper.git"
+  },
+  "author": "nittre",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nittre/rollingpaper/issues"
+  },
+  "homepage": "https://github.com/nittre/rollingpaper#readme",
+  "dependencies": {
+    "cookie-parser": "^1.4.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "morgan": "^1.10.0",
+    "nunjucks": "^3.2.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  }
+}
