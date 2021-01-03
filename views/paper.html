@@ -1,0 +1,11 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div class='paper__container'>
+        <ul>
+            {% for post in paper.posts %}
+                <li>{{post.text}}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

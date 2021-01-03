@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+</head>
+<body>
+    {% if !login %}
+        <div class="login__container">
+            <form action="/login" method="post">
+                <input type="text" class='email' name='email' />
+                <input type="password" class='password' name='password' />
+                <button>login</button>
+            </form>
+            <form action="/join" method="get">
+                <button>join</button>
+            </form>
+        </div>
+    {% else %}
+        <div class='user__container'>
+            <h4>{{user.email}}</h4>
+            <h1>{{user.nickname}}님, 어서오세요!</h1>
+        </div>
+        {% block content %}{% endblock %}
+    {% endif %}
+</body>
+</html>

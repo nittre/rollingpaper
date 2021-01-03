@@ -1,0 +1,11 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div class='main__container'>
+        <ul>
+            {% for paper in papers %}
+                <li><a href=`/{{user.nickname}}/{{paper.id}}`></a></li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
