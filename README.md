@@ -1,6 +1,8 @@
 # rollingpaper
 온라인 롤링페이퍼
 
+타임라인: [RollingPaper 토이플젝](https://www.notion.so/nittre/07707fc7e0ce4f1eb87d0638a4dee3b0?v=55090caacd2a44d8b0c39a346dc35c1d)
+
 ## What I want
 - 사용자가 롤링페이퍼 사이트에 가입하면, 롤링페이퍼를 생성할 수 있다. 나의 롤링페이퍼를 직접 생성할 수도 있고, 타인에게 줄 롤링페이퍼를 생성할 수 있다.
     - 롤링페이퍼 당 고유번호를 부과해 URL로 뿌려 타인이 작성할 수 있게 한다.
