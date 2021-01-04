@@ -7,6 +7,7 @@ const session = require('express-session');
 const dotenv = require('dotenv');
 const nunjucks = require('nunjucks');
 const CookieParser = require('cookie-parser');
+const { sequelize } = require('./models');
 
 const loginRouter = require('./routes/login');
 const logoutRouter = require('./routes/logout');
@@ -37,6 +38,14 @@ app.use(session({
     },
     name: 'session-cookie'
 }));
+
+sequelize.sync({force: false})
+    .then(() => {
+        console.log('데이터베이스 연결 성공');
+    })
+    .catch((err) => {
+        console.error(err);
+    });
 
 app.use('/login', loginRouter);
 app.use('/logout', logoutRouter);
