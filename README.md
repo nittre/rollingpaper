@@ -26,11 +26,13 @@
 - **Node.js + Express**
 - routes
     - `GET /`: 로그인 창을 띄움. 로그인하면 `/:nickname`으로 리다이렉트.
-        - `POST /login`: 로그인 진행
-        - `GET /logout`: 로그아웃 진행
+        - `POST /auth/login`: 로그인 진행
+            - `/?loginError=${info.message}`: 로그인 에러(유저 정보 없음)
+        - `GET /auth/logout`: 로그아웃 진행
         - `GET /:nickname`: 로그인창 내리고, 사용자의 롤링페이퍼를 보여줌
-    - `GET /join`: 회원가입 페이지를 보여줌
-        - `POST /join`: 회원가입 진행. 데베에 사용자 정보 저장.
+    - `GET /auth/join`: 회원가입 페이지를 보여줌
+        - `POST /auth/join`: 회원가입 진행. 데베에 사용자 정보 저장.
+            - `POST /auth/join?error=exist`: 이미 회원가입 된 경우
     - `GET /:nickname`: 내 롤링페이퍼 목록을 보여줌
         - `GET /:nickname/new`: 새로운 롤링페이퍼 만들기 창
         - `POST /:nickname/new/`: 고유 id를 가진 롤링페이퍼를 만든다. (id와 친구에게 보내는 경우의 이메일 전송)

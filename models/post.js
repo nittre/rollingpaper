@@ -3,6 +3,12 @@ const Sequelize = require('sequelize');
 module.exports = class Post extends Sequelize.Model{
     static init(sequelize) {
         return super.init({
+            id: {
+                type: Sequelize.INTEGER(11).UNSIGNED,
+                primaryKey: true,
+                autoIncrement: true,
+                allowNull: false,
+            },
             text: {
                 type: Sequelize.STRING(200),
                 allowNull: false,
@@ -20,6 +26,6 @@ module.exports = class Post extends Sequelize.Model{
         });
     }
     static associate(db) {
-        db.Post.belongsTo(db.Paper, {foreignKey: 'posts', sourceKey: 'id'});
+        db.Post.belongsTo(db.Paper, {foreignKey: 'posts', sourceKey: 'paper_id'});
     }
 }

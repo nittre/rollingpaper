@@ -1,8 +1,35 @@
 const express = require('express');
-const router = express.Router();
+const router = express.Router({mergeParams: true});
+const {User, Paper} = require('../models');
 
-router.get('/', (req, res, next) => {
-    console.log('내 롤링페이퍼 목록 보여줌');
+router.get('/', async (req, res, next) => {
+    try {
+        const userId = req.params.user_id;
+        const user = await User.findOne({
+            where: {user_id: userId},
+            include: [{
+                model: Paper,
+            }]
+        });
+        const papers = await Paper.findAll({
+            attributes: ['paper_id', 'name'],
+            include: [{
+                model: User,
+                where: {
+                    user_id: userId
+                }
+            }]
+        });
+        res.render('main', {
+            login: true,
+            title: 'rollingpaper',
+            user,
+            papers
+        })
+    } catch (err){
+        console.error(err);
+        next(err);
+    }
 })
 router.route('/new')
     .get((req, res) => {
@@ -11,7 +38,7 @@ router.route('/new')
     .post((req, res) => {
         console.log('고유 id를 가진 롤링페이퍼 만들기');
     })
-router.route('/:id')
+router.route('/paper/:post_id')
     .get((req, res) => {
         const {edit} = req.query;
         if (edit) {

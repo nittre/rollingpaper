@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class='join__container'>
+        <form action="/auth/join" method='post'>
+            email: <input type="email" name='email' /><br />
+            nickname: <input type='text' name='nickname' /><br />
+            password: <input type="password" name='password' />
+            <button>join</button><br/>
+            <p>{{joinError}}</p>
+        </form>
+    </div>
+{% endblock %}

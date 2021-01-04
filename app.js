@@ -8,18 +8,20 @@ const dotenv = require('dotenv');
 const nunjucks = require('nunjucks');
 const CookieParser = require('cookie-parser');
 const { sequelize } = require('./models');
+const passport = require('passport');
+const passportConfig = require('./passport');
+const {isLoggedIn, isNotLoggedIn} = require('./routes/middlewares');
 
-const loginRouter = require('./routes/login');
-const logoutRouter = require('./routes/logout');
-const joinRouter = require('./routes/join');
+const authRouter = require('./routes/auth');
 const mainRouter = require('./routes/main');
 
 dotenv.config();
 
 const app = express();
+passportConfig();
 app.set('port', process.env.PORT || 8000);
 app.set('view engine', 'html');
-nunjucks.configure({
+nunjucks.configure('views', {
     express: app,
     watch: true
 })
@@ -47,10 +49,11 @@ sequelize.sync({force: false})
         console.error(err);
     });
 
-app.use('/login', loginRouter);
-app.use('/logout', logoutRouter);
-app.use('/join', joinRouter);
-app.use('/:nickname', mainRouter);
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use('/auth', authRouter);
+app.use('/:user_id', mainRouter);
 
 app.listen(app.get('port'), () => {
     console.log(app.get('port'), '번 포트에서 대기중');

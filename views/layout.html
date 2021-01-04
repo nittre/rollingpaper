@@ -6,23 +6,25 @@
     <title>{{title}}</title>
 </head>
 <body>
-    {% if !login %}
-        <div class="login__container">
-            <form action="/login" method="post">
-                <input type="text" class='email' name='email' />
-                <input type="password" class='password' name='password' />
-                <button>login</button>
-            </form>
-            <form action="/join" method="get">
-                <button>join</button>
-            </form>
-        </div>
-    {% else %}
+    {% if login == true %}
         <div class='user__container'>
             <h4>{{user.email}}</h4>
             <h1>{{user.nickname}}님, 어서오세요!</h1>
+            <form action="/auth/logout" method='get'><button>logout</button></form>
         </div>
-        {% block content %}{% endblock %}
+    {% else %}
+        <div class="login__container">
+            <form action="/auth/login" method="post">
+                <input type="text" class='email' name='email' />
+                <input type="password" class='password' name='password' />
+                <button>login</button>
+                <p>{{loginError}}</p>
+            </form>
+            <a href="/auth/join">
+                <button>join</button>
+            </a>
+        </div>
     {% endif %}
+    {% block content %}{% endblock %}
 </body>
 </html>

@@ -3,6 +3,12 @@ const Sequelize = require('sequelize');
 module.exports = class Paper extends Sequelize.Model{
     static init(sequelize) {
         return super.init({
+            paper_id: {
+                type: Sequelize.INTEGER(11).UNSIGNED,
+                primaryKey: true,
+                autoIncrement: true,
+                allowNull: false,
+            },
             name: {
                 type: Sequelize.STRING(20),
                 allowNull: false,
@@ -24,7 +30,7 @@ module.exports = class Paper extends Sequelize.Model{
         });
     }
     static associate(db) {
-        db.Paper.belongsTo(db.User, {foreignKey: 'papers', targetKey: 'id'});
-        db.Paper.hasMany(db.Post, {foreignKey: 'posts', sourceKey: 'id'});
+        db.Paper.belongsTo(db.User, {foreignKey: 'userId', targetKey: 'user_id'});
+        db.Paper.hasMany(db.Post, {foreignKey: 'posts', sourceKey: 'paper_id'});
     }
 }
