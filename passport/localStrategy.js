@@ -12,6 +12,9 @@ module.exports = () => {
         try {
             const exUser = await User.findOne({ where: {email}});
             if(exUser) {
+                if(exUser.provider){
+                    done(null, false, {message: `이미 ${exUser.provider}로 가입하셨습니다.`});
+                }
                 const result = await bcrypt.compare(password, exUser.password);
                 if (result) {
                     done(null, exUser);
