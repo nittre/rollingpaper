@@ -62,6 +62,14 @@ router.get('/kakao/callback', passport.authenticate('kakao', {
     res.redirect(`/${req.user.user_id}`);
 });
 
+router.get('/twitter', passport.authenticate('twitter'));
+
+router.get('/twitter/callback', passport.authenticate('twitter', {
+    failureRedirect: '/auth/login',
+}), (req, res) => {
+    res.redirect(`/${req.user.user_id}`);
+});
+
 router.get('/logout', (req, res, next) => {
     req.logout();
     req.session.destroy();

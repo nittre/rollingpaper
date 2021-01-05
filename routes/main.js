@@ -20,12 +20,22 @@ router.get('/', async (req, res, next) => {
                 }
             }]
         });
-        res.render('main', {
-            login: true,
-            title: 'rollingpaper',
-            user,
-            papers
-        })
+        if (user) {
+            res.render('main', {
+                login: true,
+                sns: user.provider,
+                title: 'rollingpaper',
+                user,
+                papers
+            })
+        } else {
+            res.render('main', {
+                login: true,
+                title: 'rollingpaper',
+                user,
+                papers
+            })
+        }
     } catch (err){
         console.error(err);
         next(err);

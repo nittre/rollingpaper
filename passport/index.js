@@ -1,7 +1,7 @@
 const passport = require('passport');
 const local = require('./localStrategy');
 const kakao = require('./kakaoStrategy');
-//const twitter = require('./twitterStrategy');
+const twitter = require('./twitterStrategy');
 //const facebook = require('./facebookStrategy');
 const User = require('../models/user');
 
@@ -18,6 +18,6 @@ module.exports = () => {
 
     local();
     kakao();
-    //twitter();
+    twitter();
     //facebook();
 }
