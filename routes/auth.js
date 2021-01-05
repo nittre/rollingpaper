@@ -54,6 +54,14 @@ router.route('/login')
         })(req, res, next);
     });
 
+router.get('/kakao', passport.authenticate('kakao'));
+
+router.get('/kakao/callback', passport.authenticate('kakao', {
+    failureRedirect: '/auth/login',
+}), (req, res) => {
+    res.redirect(`/${req.user.user_id}`);
+});
+
 router.get('/logout', (req, res, next) => {
     req.logout();
     req.session.destroy();
