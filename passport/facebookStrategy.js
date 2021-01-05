@@ -11,7 +11,7 @@ module.exports = () => {
         profileFields: ['id', 'displayName', 'email']
     }, async(accessToken, refreshToken, profile, cb) => {
         try{            
-            const exUser = await User.findOne({where: {email: profile.emails[0].value, provider: 'facebook'}});
+            const exUser = await User.findOne({where: {email: profile.emails[0].value}});
             if (exUser) {
                 cb(null, exUser);
             } else {

@@ -9,7 +9,7 @@ module.exports = () => {
         clientID: process.env.KAKAO_ID,
     }, async(accessToken, refreshToken, profile, done) => {
         try{
-            const exUser = await User.findOne({where: {sns_id: profile.id, provider:'kakao'}});
+            const exUser = await User.findOne({where: {sns_id: profile.id}});
             if(exUser) {
                 done(null, exUser);
             } else {

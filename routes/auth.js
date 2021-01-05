@@ -59,7 +59,11 @@ router.get('/kakao', passport.authenticate('kakao'));
 router.get('/kakao/callback', passport.authenticate('kakao', {
     failureRedirect: '/auth/login',
 }), (req, res) => {
-    res.redirect(`/${req.user.user_id}`);
+    if (req.user.provider != 'kakao') {
+        res.redirect(`/auth/login?loginError=이미 ${req.user.provider}로 가입하셨습니다.`)
+    } else {
+        res.redirect(`/${req.user.user_id}`);
+    }
 });
 
 router.get('/twitter', passport.authenticate('twitter'));
@@ -67,7 +71,11 @@ router.get('/twitter', passport.authenticate('twitter'));
 router.get('/twitter/callback', passport.authenticate('twitter', {
     failureRedirect: '/auth/login',
 }), (req, res) => {
-    res.redirect(`/${req.user.user_id}`);
+    if (req.user.provider != 'twitter') {
+        res.redirect(`/auth/login?loginError=이미 ${req.user.provider}로 가입하셨습니다.`)
+    } else {
+        res.redirect(`/${req.user.user_id}`);
+    }
 });
 
 router.get('/facebook', passport.authenticate('facebook', {scope: 'email'}));
@@ -75,7 +83,11 @@ router.get('/facebook', passport.authenticate('facebook', {scope: 'email'}));
 router.get('/facebook/callback', passport.authenticate('facebook', {
     failureRedirect: '/auth/login',
 }), (req, res) => {
-    res.redirect(`/${req.user.user_id}`);
+    if (req.user.provider != 'facebook') {
+        res.redirect(`/auth/login?loginError=이미 ${req.user.provider}로 가입하셨습니다.`)
+    } else {
+        res.redirect(`/${req.user.user_id}`);
+    }
 });
 
 router.get('/logout', (req, res, next) => {
