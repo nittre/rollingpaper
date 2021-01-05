@@ -11,7 +11,7 @@ module.exports = () => {
         includeEmail: true
     }, async(token, tokenSecret, profile, cb) => {
         try{
-            const exUser = await User.findOne({where: {email: profile.emails[0].value}});
+            const exUser = await User.findOne({where: {email: profile.emails[0].value, provider: 'twitter'}});
             if (exUser) {
                 cb(null, exUser);
             } else {
