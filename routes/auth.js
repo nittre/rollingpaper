@@ -70,6 +70,14 @@ router.get('/twitter/callback', passport.authenticate('twitter', {
     res.redirect(`/${req.user.user_id}`);
 });
 
+router.get('/facebook', passport.authenticate('facebook', {scope: 'email'}));
+
+router.get('/facebook/callback', passport.authenticate('facebook', {
+    failureRedirect: '/auth/login',
+}), (req, res) => {
+    res.redirect(`/${req.user.user_id}`);
+});
+
 router.get('/logout', (req, res, next) => {
     req.logout();
     req.session.destroy();
