@@ -2,9 +2,12 @@
 
 {% block content %}
     <div class='main__container'>
+        {% set new_url = "/" + user.user_id + "/new" %}
+        <form action="{{new_url}}" method='get'><button>new</button></form>
         <ul>
             {% for paper in papers %}
-                <li><a href=`/{{user.nickname}}/{{paper.paper_id}}`></a></li>
+                {% set url = '/' + user.user_id + '/' + paper.paper_id %}
+                <li><a href="{{url}}">{{paper.name}}</a></li>
             {% endfor %}
         </ul>
     </div>

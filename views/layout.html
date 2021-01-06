@@ -12,6 +12,7 @@
             <h1>{{user.nickname}}님, 어서오세요!</h1>
             <form action="/auth/logout" method='get'><button>logout</button></form>
         </div>
+        {% block content %}{% endblock %}
     {% else %}
         <div class="login__container">
             <form action="/auth/login" method="post">
@@ -28,6 +29,6 @@
             </a>
         </div>
     {% endif %}
-    {% block content %}{% endblock %}
+    
 </body>
 </html>

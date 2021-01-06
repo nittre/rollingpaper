@@ -43,18 +43,31 @@ router.get('/', async (req, res, next) => {
 })
 router.route('/new')
     .get((req, res) => {
-        console.log('새로운 롤링페이퍼 만들기 창 띄우기');
+        const user = req.user;
+        res.render('new', {login: true, user});
     })
     .post((req, res) => {
-        console.log('고유 id를 가진 롤링페이퍼 만들기');
+        const {name, email} = req.body;
+        const userId = req.user.user_id;
+        const newPaper = Paper.create({
+            name,
+            email,
+            userId
+        }, {include: [User]})
+        .then((paper)=> {
+            return res.redirect(`/${req.user.user_id}/${paper}`)
+        });
     })
-router.route('/paper/:post_id')
+router.route('/:paper_id')
     .get((req, res) => {
         const {edit} = req.query;
-        if (edit) {
-            console.log('게시글 작성 가능한 롤링페이퍼를 보여줌')
-        }
-        console.log('해당 id를 가진 롤링페이퍼를 보여줌');
+        Paper.findOne({
+            where: { userId: req.user.user_id }
+        })
+        .then((paper) => {
+            return res.render('paper', {login: true, paper});
+        })
+        
     })
     .post((req, res) => {
         const {filter, deleting, edit} = req.query;
@@ -68,7 +81,7 @@ router.route('/paper/:post_id')
             console.log('게시글 작성');
         }
     })
-router.get('/:id/:post_id', (req, res) => {
+router.get('/:paper_id/:post_id', (req, res) => {
     console.log('해당 롤링페이퍼의 특정 게시글을 보여줌');
 })
 

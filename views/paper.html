@@ -2,6 +2,7 @@
 
 {% block content %}
     <div class='paper__container'>
+        <h2>{{paper.name}}</h2>
         <ul>
             {% for post in paper.posts %}
                 <li>{{post.text}}</li>
