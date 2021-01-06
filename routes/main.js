@@ -48,19 +48,27 @@ router.get('/', isLoggedIn, isItMe, async (req, res, next) => {
 router.route('/new')
     .get(isLoggedIn, isItMe, (req, res) => {
         const user = req.user;
-        res.render('new', {login: true, user});
+        const error = req.query.error;
+        res.render('new', {login: true, error, user});
     })
     .post((req, res) => {
+        console.log(req.body);
         const {name, email} = req.body;
         const userId = req.user.user_id;
-        const newPaper = Paper.create({
+        Paper.create({
             name,
             email,
             userId
         }, {include: [User]})
         .then((paper)=> {
+            console.log(paper.paper_id);
             return res.redirect(`/${req.user.user_id}/${paper.paper_id}`)
-        });
+        })
+        .catch((err) => {
+            const message = '롤링페이퍼를 만들 수 없습니다.'
+            console.error(err);
+            return res.redirect(`/${req.user.user_id}/new?error=${message}`)
+        })
     })
 router.route('/:paper_id')
     .get(isLoggedIn, isItMe, (req, res) => {
@@ -69,7 +77,7 @@ router.route('/:paper_id')
             where: { userId: req.user.user_id }
         })
         .then((paper) => {
-            return res.render('paper', {login: true, paper});
+            return res.render('paper', {login: true, user: req.user, paper});
         })
         
     })

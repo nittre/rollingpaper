@@ -16,7 +16,6 @@ module.exports = class Paper extends Sequelize.Model{
             email: {
                 type: Sequelize.STRING(50),
                 allowNull: true,
-                unique: true
             }
         }, {
             sequelize,
