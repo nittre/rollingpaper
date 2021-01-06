@@ -62,7 +62,7 @@ router.route('/new')
         }, {include: [User]})
         .then((paper)=> {
             console.log(paper.paper_id);
-            return res.redirect(`/${req.user.user_id}/${paper.paper_id}`)
+            return res.redirect(`/${req.user.user_id}/${paper.paper_id}?master=true`)
         })
         .catch((err) => {
             const message = '롤링페이퍼를 만들 수 없습니다.'
@@ -71,15 +71,23 @@ router.route('/new')
         })
     })
 router.route('/:paper_id')
-    .get(isLoggedIn, isItMe, (req, res) => {
-        const {edit} = req.query;
-        Paper.findOne({
-            where: { userId: req.user.user_id }
-        })
-        .then((paper) => {
-            return res.render('paper', {login: true, user: req.user, paper});
-        })
-        
+    .get(async (req, res) => {
+        const {master, edit} = req.query;
+        const {user_id, paper_id} = req.params;
+        const paper = await Paper.findOne({
+            where: { userId: user_id, paper_id: paper_id }
+        });
+        const user = await User.findOne({
+            where: {user_id}
+        });
+
+        if (master) { // 계정주인이 접근할때
+            return res.render('paper', {login: true, user, paper, master: true});
+        } else if (edit) {  // edit URL로 들어왔을 때
+            return res.render('paper', {login: true, user, paper, edit: true});
+        } else {  // 일반 url로 들어왔을 때(수정x)
+            return res.render('paper', {login: true, user, paper});
+        }
     })
     .post((req, res) => {
         const {filter, deleting, edit} = req.query;
