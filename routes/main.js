@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router({mergeParams: true});
 const {User, Paper, Post} = require('../models');
 const {isLoggedIn, isNotLoggedIn, isItMe} = require('./middlewares');
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
 router.get('/', isLoggedIn, isItMe, async (req, res, next) => {
     try {
@@ -78,7 +80,7 @@ router.route('/:paper_id')
             where: { userId: user_id, paper_id: paper_id }
         });
         const posts = await Post.findAll({
-            where: {'posts': paper_id},
+            where: {'posts': paper_id, 'show': 1},
         });
 
         if (master) { // 계정주인이 접근할때
@@ -98,7 +100,29 @@ router.route('/:paper_id')
         const {user_id, paper_id} = req.params;
         const {filter, deleting, edit} = req.query;
         if (filter) {
-            console.log('필터링 단어 추가');
+            const words = '%'+req.body.words+'%';
+            await Post.findAll({
+                where: {
+                    text: {
+                        [Op.like]: words
+                    }
+                }
+            })
+            .then((posts) => {
+                return posts.map(async (post, i, arr)=> {
+                    post.show = 0;
+                    await post.save();
+                })
+            })
+            .then(() => {
+                return res.redirect(`/${user_id}/${paper_id}?master=true`);
+            })
+            .catch((err) => {
+                console.error(err);
+                const message = '필터링x';
+                return res.redirect(`/${user_id}/${paper_id}?master=true?error=${message}`);
+            })
+            
         }
         if (deleting) {
             const id = req.body.post_id;
@@ -111,7 +135,8 @@ router.route('/:paper_id')
             const text = req.body.post;
             Post.create({
                 text,
-                posts: paper_id
+                posts: paper_id,
+                show: 1
             })
             .then((post) => {
                 return res.redirect(`/${user_id}/${paper_id}?edit=true`);

@@ -13,6 +13,10 @@ module.exports = class Post extends Sequelize.Model{
                 type: Sequelize.STRING(200),
                 allowNull: false,
                 unique: true
+            },
+            show: {
+                type: Sequelize.BOOLEAN,
+                defaultValue: 1
             }
         }, {
             sequelize,
