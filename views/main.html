@@ -2,6 +2,7 @@
 
 {% block content %}
     <div class='main__container'>
+        {% if error %} {{error}} {% endif %}
         {% set new_url = "/" + user.user_id + "/new" %}
         <form action="{{new_url}}" method='get'><button>new</button></form>
         <ul>

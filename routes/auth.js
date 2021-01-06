@@ -32,7 +32,7 @@ router.route('/join')
     });
 
 router.route('/login')
-    .get((req, res, next) => {
+    .get(isNotLoggedIn, (req, res, next) => {
         res.render('main', {login: false, loginError: req.query.loginError});
     })
     .post(isNotLoggedIn, (req, res, next) => {
@@ -90,9 +90,9 @@ router.get('/facebook/callback', passport.authenticate('facebook', {
     }
 });
 
-router.get('/logout', (req, res, next) => {
-    req.logout();
-    req.session.destroy();
+router.get('/logout', async (req, res, next) => {
+    await req.logout();
+    await req.session.destroy();
     res.redirect('/auth/login');
 });
 

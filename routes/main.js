@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router({mergeParams: true});
 const {User, Paper} = require('../models');
+const {isLoggedIn, isNotLoggedIn, isItMe} = require('./middlewares');
 
-router.get('/', async (req, res, next) => {
+router.get('/', isLoggedIn, isItMe, async (req, res, next) => {
     try {
+        const error = req.query.error;
         const userId = req.params.user_id;
         const user = await User.findOne({
             where: {user_id: userId},
@@ -26,14 +28,16 @@ router.get('/', async (req, res, next) => {
                 sns: user.provider,
                 title: 'rollingpaper',
                 user,
-                papers
+                papers,
+                error
             })
         } else {
             res.render('main', {
                 login: true,
                 title: 'rollingpaper',
                 user,
-                papers
+                papers,
+                error
             })
         }
     } catch (err){
@@ -42,7 +46,7 @@ router.get('/', async (req, res, next) => {
     }
 })
 router.route('/new')
-    .get((req, res) => {
+    .get(isLoggedIn, isItMe, (req, res) => {
         const user = req.user;
         res.render('new', {login: true, user});
     })
@@ -55,11 +59,11 @@ router.route('/new')
             userId
         }, {include: [User]})
         .then((paper)=> {
-            return res.redirect(`/${req.user.user_id}/${paper}`)
+            return res.redirect(`/${req.user.user_id}/${paper.paper_id}`)
         });
     })
 router.route('/:paper_id')
-    .get((req, res) => {
+    .get(isLoggedIn, isItMe, (req, res) => {
         const {edit} = req.query;
         Paper.findOne({
             where: { userId: req.user.user_id }
