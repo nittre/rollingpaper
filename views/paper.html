@@ -2,29 +2,33 @@
     <div class='paper__container'>
         <h2>{{paper.name}}</h2>
         {% if master %}
-            {% set filter_url = "/" + user.user_id + "/" + paper.paper_id + "?filter=true" %}
-            {% set deleting_url = "/" + user.user_id + "/" + paper.paper_id + "?deleting=true" %}
-            {% set share_url_edit = "/" + user.user_id + "/" + paper.paper_id + "?edit=true" %}
+            {% set filter_url = "/" + user_id + "/" + paper.paper_id + "?filter=true" %}
+            {% set deleting_url = "/" + user_id + "/" + paper.paper_id + "?deleting=true" %}
+            {% set share_url_edit = "/" + user_id + "/" + paper.paper_id + "?edit=true" %}
 
             <form action={{filter_url}}><input type="text" name='words'><button>필터링하기</button></form>
             
             공유하기: {{share_url_edit}}
 
             <ul>
-                {% for post in paper.posts %}
+                {% for post in posts %}
                     <li>{{post.text}}</li>
-                    <form action="{{deleting_url}}" method="post"><button>삭제</button></form>
+                    <form action="{{deleting_url}}" method="post"><button name='post_id' value={{post.id}}>삭제</button></form>
                 {% endfor %}
             </ul>
         {% else %}
             {% if edit %}
-                <form action="새 게시글 작성 url" method="post"><button>새 게시글 작성하기</button></form>
+                <form action="{{share_url_edit}}" method="post">
+                    <input type='textarea' name="post" />
+                    <button>새 게시글 작성하기</button>
+                </form>
             {% endif %}
+                {% if error %} {{error}} {% endif %}
                 <ul>
-                {% for post in paper.posts %}
-                    <li>{{post.text}}</li>
-                {% endfor %}
-            </ul>
+                    {% for post in posts %}
+                        <li>{{post.text}}</li>
+                    {% endfor %}
+                </ul>
         {% endif %}
     </div>
     <script>
