@@ -197,6 +197,17 @@ router.route('/:paper_id')
             
         }
     })
+router.post('/:paper_id/delete', isItMe, (req, res) => {
+    Paper.destroy({
+        where: {
+            paper_id: req.params.paper_id
+        }
+    })
+    .then(() => {
+        return res.redirect(`/${req.params.user_id}/`)
+    })
+})
+
 router.get('/:paper_id/:post_id', (req, res) => {
     console.log('해당 롤링페이퍼의 특정 게시글을 보여줌');
 })
