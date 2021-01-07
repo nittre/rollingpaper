@@ -27,23 +27,24 @@
 ## back-end
 - **Node.js + Express**
 - routes
-    - `GET /`: 로그인 창을 띄움. 로그인하면 `/:nickname`으로 리다이렉트.
+    - `GET /`: 로그인 창을 띄움. 로그인하면 `/:user_id`으로 리다이렉트.
         - `POST /auth/login`: 로그인 진행
             - `/?loginError=${info.message}`: 로그인 에러(유저 정보 없음)
         - `GET /auth/logout`: 로그아웃 진행
-        - `GET /:nickname`: 로그인창 내리고, 사용자의 롤링페이퍼를 보여줌
+        - `GET /:user_id`: 로그인창 내리고, 사용자의 롤링페이퍼를 보여줌
     - `GET /auth/join`: 회원가입 페이지를 보여줌
         - `POST /auth/join`: 회원가입 진행. 데베에 사용자 정보 저장.
             - `POST /auth/join?error=exist`: 이미 회원가입 된 경우
-    - `GET /:nickname`: 내 롤링페이퍼 목록을 보여줌
-        - `GET /:nickname/new`: 새로운 롤링페이퍼 만들기 창
-        - `POST /:nickname/new/`: 고유 id를 가진 롤링페이퍼를 만든다. (id와 친구에게 보내는 경우의 이메일 전송)
-        - `GET /:nickname/:id`: 해당 id를 가진 롤링페이퍼를 보여줌
-            - `GET /:nickname/:id/:post_id`: 해당 롤링페이퍼의 특정 게시글
-            - `POST /:nickname/:id?filter={필터링 단어}`: 필터링 단어 추가
-            - `POST /:nickname/:id?delete={게시글 id}`: 게시글 삭제
-        - `GET /:nickname/:id?edit=true`: 해당 URL로 들어온 경우, 게시글 쓰기 가능
-            - `POST /:nickname/:id?edit=true`: 게시글 작성. (게시글 고유 번호와 내용 전송)
+    - `GET /:user_id`: 내 롤링페이퍼 목록을 보여줌
+        - `GET /:user_id/new`: 새로운 롤링페이퍼 만들기 창
+        - `POST /:user_id/new/`: 고유 id를 가진 롤링페이퍼를 만든다. (id와 친구에게 보내는 경우의 이메일 전송)
+        - `GET /:user_id/:paper_id`: 해당 id를 가진 롤링페이퍼를 보여줌
+            - `POST /:user_id/:paper_id/delete`: 롤링페이퍼 삭제
+            - `GET /:user_id/:paper_id/:post_id`: 해당 롤링페이퍼의 특정 게시글
+            - `POST /:user_id/:paper_id?filter={필터링 단어}`: 필터링 단어 추가
+            - `POST /:user_id/:paper_id?delete={게시글 id}`: 게시글 삭제 or 필터링 단어 삭제
+        - `GET /:user_id/:paper_id?edit=true`: 해당 URL로 들어온 경우, 게시글 쓰기 가능
+            - `POST /:user_id/:paper_id?edit=true`: 게시글 작성. (게시글 고유 번호와 내용 전송)
 
 - 데이터베이스: **MySQL**
     - 사용자 정보: 닉네임(고유), 이메일(고유), 비밀번호, (foreign key) 내 롤링페이퍼 id, (foreign key) 친구에게 줄 롤링페이퍼 id
