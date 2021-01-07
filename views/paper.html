@@ -7,7 +7,11 @@
             {% set share_url_edit = "/" + user_id + "/" + paper.paper_id + "?edit=true" %}
 
             <form action={{filter_url}} method='post'><input type="text" name='words' /><button>필터링하기</button></form>
-            
+            필터링 단어
+            {% for word in filter_words %}
+                <li>{{word.word}}</li>
+                <form action="{{deleting_url}}" method="post"><button name='word_id' value={{word}}>삭제</button></form>
+            {% endfor %}
             공유하기: {{share_url_edit}}
 
             <ul>
@@ -18,6 +22,7 @@
             </ul>
         {% else %}
             {% if edit %}
+                
                 <form action="{{share_url_edit}}" method="post">
                     <input type='textarea' name="post" />
                     <button>새 게시글 작성하기</button>

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router({mergeParams: true});
-const {User, Paper, Post} = require('../models');
+const {User, Paper, Post, Filter} = require('../models');
 const {isLoggedIn, isNotLoggedIn, isItMe} = require('./middlewares');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
@@ -79,32 +79,52 @@ router.route('/:paper_id')
         const paper = await Paper.findOne({
             where: { userId: user_id, paper_id: paper_id }
         });
-        const posts = await Post.findAll({
-            where: {'posts': paper_id, 'show': 1},
-        });
+        const filter_words = await Filter.findAll({where: {}, attributes: ['word']});
+        for (word in filter_words) {
+            const filter_word = '%'+filter_words[word].word+'%';
+            await Post.findAll({ // 기존 글들 중 필터링 단어에 포함되는 게시글 숨김 처리
+                where: {
+                    text: {
+                        [Op.like]: filter_word
+                    }
+                }
+            })
+            .then( async (posts) => {
+                return posts.map(async (post, i, arr)=> {
+                    post.show = 0;
+                    await post.save();
+                })
+            })
+        }
+        
+        const posts = await Post.findAll({attributes: ['text'], where: {'posts': paper_id, 'show': 1}});
 
         if (master) { // 계정주인이 접근할때
             if (req.isAuthenticated() && (req.user.user_id == user_id)){
-                return res.render('paper', {login: true, user_id, paper, posts, master: true});
+                return res.render('paper', {login: true, user_id, paper, posts, filter_words, master: true});
             } else { //계정 주인이 아닌 사람이 접근할 때
                 const message = '접근 권한이 없습니다.';
                 return res.redirect(`/auth/login?loginError=${message}`);
             }
         } else if (edit) {  // edit URL로 들어왔을 때
-            return res.render('paper', {login: true, user_id, paper, posts, edit: true});
+            return res.render('paper', {login: true, user_id, paper, posts, error: req.query.error, edit: true});
         } else {  // 일반 url로 들어왔을 때(수정x)
             return res.render('paper', {login: true, user_id, paper, posts});
         }
     })
-    .post(async (req, res) => {
+    .post(async (req, res, next) => {
         const {user_id, paper_id} = req.params;
         const {filter, deleting, edit} = req.query;
-        if (filter) {
-            const words = '%'+req.body.words+'%';
-            await Post.findAll({
+        if (filter) { 
+            const words = req.body.words;
+            const f_words = '%'+words+'%';
+            await Filter.create({  //필터링 단어 추가
+                word: words
+            });
+            await Post.findAll({ // 기존 글들 중 필터링 단어에 포함되는 게시글 숨김 처리
                 where: {
                     text: {
-                        [Op.like]: words
+                        [Op.like]: f_words
                     }
                 }
             })
@@ -133,19 +153,39 @@ router.route('/:paper_id')
         }
         if (edit) {
             const text = req.body.post;
-            Post.create({
-                text,
-                posts: paper_id,
-                show: 1
-            })
-            .then((post) => {
-                return res.redirect(`/${user_id}/${paper_id}?edit=true`);
-            })
-            .catch((err) => {
-                console.error(err);
-                const message = '롤링페이퍼를 작성할 수 없습니다';
-                return res.redirect(`/${user_id}/${paper_id}?edit=true?error=${message}`);
-            })
+            let f_word = '';
+            await Filter.findAll({attributes: ['word']})
+                .then((filter_words) => {
+                    for(w in filter_words) {
+                        if(text.indexOf(filter_words[w].word) != -1) {
+                            f_word = filter_words[w].word;
+                            return;
+                        }
+                    }
+                })
+                .then(async () => {
+                    if(f_word != '') {
+                        const message = f_word+'는 사용할 수 없는 단어입니다.'
+                        return res.redirect(`/${req.params.user_id}/${req.params.paper_id}?edit=true&error=${message}`);
+                    }
+                    else {
+                        await Post.create({
+                            text,
+                            posts: paper_id,
+                            show: 1
+                        })
+                        .then((post) => {
+                            return res.redirect(`/${user_id}/${paper_id}?edit=true`);
+                        })
+                        .catch((err) => {
+                            console.error(err);
+                            const message = '롤링페이퍼를 작성할 수 없습니다';
+                            return res.redirect(`/${user_id}/${paper_id}?edit=true?error=${message}`);
+                        })
+                    }
+                })
+                
+            
         }
     })
 router.get('/:paper_id/:post_id', (req, res) => {
