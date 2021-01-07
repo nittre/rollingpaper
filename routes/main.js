@@ -208,8 +208,23 @@ router.post('/:paper_id/delete', isItMe, (req, res) => {
     })
 })
 
+router.post('/:paper_id/open_post', (req, res) => {
+    res.redirect(`/${req.params.user_id}/${req.params.paper_id}/${req.body.post_id}`);
+})
 router.get('/:paper_id/:post_id', (req, res) => {
-    console.log('해당 롤링페이퍼의 특정 게시글을 보여줌');
+    const {user_id, paper_id, post_id} = req.params;
+    Post.findOne({where: {show: 1, posts: paper_id, id: post_id}})
+    .then((paper) => {
+        if(!paper) {
+            if ((req.isAuthenticated()) && (req.user.user_id == user_id)) {
+                return res.redirect(`/${user_id}/${paper_id}?master=true`);
+            } else {
+                return res.redirect(`/${user_id}/${paper_id}`);
+            }
+        } else {
+            return res.render('page', {text: paper.text})
+        }
+    })
 })
 
 module.exports = router;

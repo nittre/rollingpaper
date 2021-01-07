@@ -6,6 +6,7 @@
             {% set deleting_url = "/" + user_id + "/" + paper.paper_id + "?deleting=true" %}
             {% set share_url_edit = "/" + user_id + "/" + paper.paper_id + "?edit=true" %}
             {% set delete_papaer_url = "/" + user_id + "/" + paper.paper_id + "/delete" %}
+            {% set post_url = "/" + user_id + "/" + paper.paper_id + "/open_post" %}
 
             <form action={{filter_url}} method='post'><input type="text" name='words' /><button>필터링하기</button></form>
             필터링 단어
@@ -19,6 +20,7 @@
                 {% for post in posts %}
                     <li>{{post.text}}</li>
                     <form action="{{deleting_url}}" method="post"><button name='post_id' value={{post.id}}>삭제</button></form>
+                    <form action="{{post_url}}" method="post"><button name='post_id' value={{post.id}}>포스트 보기</button></form>
                 {% endfor %}
             </ul>
         {% else %}
