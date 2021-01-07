@@ -79,7 +79,7 @@ router.route('/:paper_id')
         const paper = await Paper.findOne({
             where: { userId: user_id, paper_id: paper_id }
         });
-        const filter_words = await Filter.findAll({where: {}, attributes: ['word']});
+        const filter_words = await Filter.findAll({where: {}, attributes: ['word', 'id']});
         for (word in filter_words) {
             const filter_word = '%'+filter_words[word].word+'%';
             await Post.findAll({ // 기존 글들 중 필터링 단어에 포함되는 게시글 숨김 처리
@@ -97,8 +97,8 @@ router.route('/:paper_id')
             })
         }
         
-        const posts = await Post.findAll({attributes: ['text'], where: {'posts': paper_id, 'show': 1}});
-
+        const posts = await Post.findAll({attributes: ['text', 'id'], where: {'posts': paper_id, 'show': 1}});
+        
         if (master) { // 계정주인이 접근할때
             if (req.isAuthenticated() && (req.user.user_id == user_id)){
                 return res.render('paper', {login: true, user_id, paper, posts, filter_words, master: true});
@@ -144,12 +144,21 @@ router.route('/:paper_id')
             })
             
         }
-        if (deleting) {
-            const id = req.body.post_id;
-            await Post.destroy({
-                where: {id}
-            })
-            return res.redirect(`/${user_id}/${paper_id}?master=true`);
+        if(deleting){
+            const {post_id, word_id} = req.body;
+            if (post_id) {
+                await Post.destroy({
+                    where: {id: post_id}
+                })
+                return res.redirect(`/${user_id}/${paper_id}?master=true`);
+            }
+            if (word_id) {
+                console.log(word_id);
+                await Filter.destroy({
+                    where: {id: word_id}
+                })
+                return res.redirect(`/${user_id}/${paper_id}?master=true`);
+            }
         }
         if (edit) {
             const text = req.body.post;

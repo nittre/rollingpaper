@@ -10,7 +10,7 @@
             필터링 단어
             {% for word in filter_words %}
                 <li>{{word.word}}</li>
-                <form action="{{deleting_url}}" method="post"><button name='word_id' value={{word}}>삭제</button></form>
+                <form action="{{deleting_url}}" method="post"><button name='word_id' value={{word.id}}>삭제</button></form>
             {% endfor %}
             공유하기: {{share_url_edit}}
 
