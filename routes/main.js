@@ -54,7 +54,6 @@ router.route('/new')
         res.render('new', {login: true, error, user});
     })
     .post((req, res) => {
-        console.log(req.body);
         const {name, email} = req.body;
         const userId = req.user.user_id;
         Paper.create({
@@ -63,7 +62,6 @@ router.route('/new')
             userId
         }, {include: [User]})
         .then((paper)=> {
-            console.log(paper.paper_id);
             return res.redirect(`/${req.user.user_id}/${paper.paper_id}?master=true`)
         })
         .catch((err) => {
@@ -79,7 +77,7 @@ router.route('/:paper_id')
         const paper = await Paper.findOne({
             where: { userId: user_id, paper_id: paper_id }
         });
-        const filter_words = await Filter.findAll({where: {}, attributes: ['word', 'id']});
+        const filter_words = await Filter.findAll({where: {userId: user_id}, include: User, attributes: ['word', 'id']});
         for (word in filter_words) {
             const filter_word = '%'+filter_words[word].word+'%';
             await Post.findAll({ // 기존 글들 중 필터링 단어에 포함되는 게시글 숨김 처리
@@ -118,8 +116,10 @@ router.route('/:paper_id')
         if (filter) { 
             const words = req.body.words;
             const f_words = '%'+words+'%';
+            console.log(user_id);
             await Filter.create({  //필터링 단어 추가
-                word: words
+                word: words,
+                userId: user_id
             });
             await Post.findAll({ // 기존 글들 중 필터링 단어에 포함되는 게시글 숨김 처리
                 where: {
@@ -153,9 +153,8 @@ router.route('/:paper_id')
                 return res.redirect(`/${user_id}/${paper_id}?master=true`);
             }
             if (word_id) {
-                console.log(word_id);
                 await Filter.destroy({
-                    where: {id: word_id}
+                    where: {id: word_id, userId: user_id}
                 })
                 return res.redirect(`/${user_id}/${paper_id}?master=true`);
             }
@@ -163,7 +162,7 @@ router.route('/:paper_id')
         if (edit) {
             const text = req.body.post;
             let f_word = '';
-            await Filter.findAll({attributes: ['word']})
+            await Filter.findAll({where: {userId: user_id}, attributes: ['word']})
                 .then((filter_words) => {
                     for(w in filter_words) {
                         if(text.indexOf(filter_words[w].word) != -1) {

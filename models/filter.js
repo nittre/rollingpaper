@@ -12,7 +12,6 @@ module.exports = class Filter extends Sequelize.Model{
             word: {
                 type: Sequelize.STRING(20),
                 allowNull: false,
-                unique: true
             }
         }, {
             sequelize,
@@ -25,5 +24,7 @@ module.exports = class Filter extends Sequelize.Model{
             collate: 'utf8mb4_general_ci'
         });
     }
-    static associate(db) {}
+    static associate(db) {
+        db.Filter.belongsTo(db.User, {foreignKey: 'userId', targetKey: 'user_id'});
+    }
 }
