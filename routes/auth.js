@@ -7,7 +7,7 @@ const User = require('../models/user');
 const router = express.Router();
 
 router.route('/join')
-    .get((req, res) => {
+    .get(isNotLoggedIn, (req, res) => {
         res.render('join', {join: true, title: '회원가입', joinError: req.query.error});
     })
     .post(isNotLoggedIn, async (req, res) => {
