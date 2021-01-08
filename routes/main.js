@@ -11,37 +11,37 @@ router.get('/', isLoggedIn, isItMe, async (req, res, next) => {
         const userId = req.params.user_id;
         const user = await User.findOne({
             where: {user_id: userId},
-            include: [{
-                model: Paper,
-            }]
         });
+
+        await Paper.findAll({
+            where: {
+                email: user.email
+            }
+        })
+            .then((papers) => {
+                papers.forEach((paper, i, arr) => {
+                    paper.sending = false;
+                    paper.userId = userId;
+                    paper.save();
+                });
+            })
+
         const papers = await Paper.findAll({
-            attributes: ['paper_id', 'name'],
-            include: [{
-                model: User,
                 where: {
-                    user_id: userId
-                }
-            }]
+                    userId: userId
+                },
         });
-        if (user) {
-            res.render('main', {
-                login: true,
-                sns: user.provider,
-                title: 'rollingpaper',
-                user,
-                papers,
-                error
-            })
-        } else {
-            res.render('main', {
-                login: true,
-                title: 'rollingpaper',
-                user,
-                papers,
-                error
-            })
-        }
+        
+        res.render('main', {
+            login: true,
+            sns: user.provider,
+            title: 'rollingpaper',
+            user,
+            papers,
+            error,
+            message: req.query.message
+        })
+
     } catch (err){
         console.error(err);
         next(err);
@@ -112,7 +112,34 @@ router.route('/:paper_id')
     })
     .post(async (req, res, next) => {
         const {user_id, paper_id} = req.params;
-        const {filter, deleting, edit} = req.query;
+        const {filter, deleting, edit, send} = req.query;
+        if (send) {
+            const paper = await Paper.findOne({
+                where: {
+                    paper_id
+                }
+            })
+            await User.findOne({
+                where: {
+                    email: req.body.email
+                }
+            })
+            .then((user) => {
+                if(user) {
+                    paper.userId = user.user_id;
+                    paper.sender_id = user_id;
+                    paper.sending = 0;
+                    paper.save();
+                } else {
+                    paper.sending = 1;
+                    paper.sender_id = user_id;
+                    paper.email = req.body.email;
+                    paper.save();
+                }
+                const message = '친구에게 보냈습니다';
+                return res.redirect(`/${user_id}?message=${message}`);
+            })
+        }
         if (filter) { 
             const words = req.body.words;
             const f_words = '%'+words+'%';

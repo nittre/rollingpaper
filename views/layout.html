@@ -13,6 +13,8 @@
             <form action="/auth/logout" method='get'><button>logout</button></form>
         </div>
         {% block content %}{% endblock %}
+    {% elif join %}
+        {% block join %}{% endblock %}
     {% else %}
         <div class="login__container">
             <form action="/auth/login" method="post">

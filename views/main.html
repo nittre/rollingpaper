@@ -6,10 +6,25 @@
         {% set new_url = "/" + user.user_id + "/new" %}
         <form action="{{new_url}}" method='get'><button>new</button></form>
         <ul>
+            
+            
             {% for paper in papers %}
+                {% set send_url = '/' + user.user_id + '/' + paper.paper_id + '?send=true' %}
                 {% set url = '/' + user.user_id + '/' + paper.paper_id + '?master=true' %}
                 <li><a href="{{url}}">{{paper.name}}</a></li>
+                {% if paper.sender_id == null %}
+                    <form action={{send_url}} method="post">
+                        <input type="email" name='email' />
+                        <button>친구에게 보내기</button>
+                    </form>
+                {% endif %}
+                {% if paper.sender %}
+                    {{paper.sender}}님이 보냄
+                {% endif %}
             {% endfor %}
+            {% if message %}
+                {{message}}
+            {% endif %}
         </ul>
     </div>
 {% endblock %}

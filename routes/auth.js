@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.route('/join')
     .get((req, res) => {
-        res.render('join', {login: false, title: '회원가입', joinError: req.query.error});
+        res.render('join', {join: true, title: '회원가입', joinError: req.query.error});
     })
     .post(isNotLoggedIn, async (req, res) => {
         const {email, nickname, password} = req.body;

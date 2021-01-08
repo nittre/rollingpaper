@@ -16,7 +16,11 @@ module.exports = class Paper extends Sequelize.Model{
             email: {
                 type: Sequelize.STRING(50),
                 allowNull: true,
-            }
+            },
+            sending: {
+                type: Sequelize.BOOLEAN,
+                defaultValue: 0
+            }, 
         }, {
             sequelize,
             timestamps: true,
@@ -29,6 +33,7 @@ module.exports = class Paper extends Sequelize.Model{
         });
     }
     static associate(db) {
+        db.Paper.belongsTo(db.User, {foreignKey: 'sender_id', targetKey: 'user_id'});
         db.Paper.belongsTo(db.User, {foreignKey: 'userId', targetKey: 'user_id'});
         db.Paper.hasMany(db.Post, {foreignKey: 'posts', sourceKey: 'paper_id'});
     }

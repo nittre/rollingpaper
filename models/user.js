@@ -41,6 +41,7 @@ module.exports = class User extends Sequelize.Model{
         });
     }
     static associate(db) {
+        db.User.hasMany(db.Paper, {foreignKey: 'sender_id', sourceKey: 'user_id'});
         db.User.hasMany(db.Paper, {foreignKey: 'userId', sourceKey: 'user_id'});
         db.User.hasMany(db.Filter, {foreignKey: 'userId', soureKey: 'user_id'});
     }

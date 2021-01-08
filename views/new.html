@@ -5,7 +5,6 @@
     {% set new_url = "/" + user.user_id + "/new" %}
     <form action="{{new_url}}" method="post">
         <input type="text" name="name" id="name" />
-        <input type="email" name="email" id="email" />
         <button>새로운 롤링페이퍼 만들기</button>
     </form>
     {% if error %} {{error}} {% endif %}
