@@ -7,7 +7,7 @@ const Op = Sequelize.Op;
 
 router.get('/', isLoggedIn, isItMe, async (req, res, next) => {
     try {
-        const error = req.query.error;
+        const {error, message} = req.query;
         const userId = req.params.user_id;
         const user = await User.findOne({
             where: {user_id: userId},
@@ -34,12 +34,11 @@ router.get('/', isLoggedIn, isItMe, async (req, res, next) => {
         
         res.render('main', {
             login: true,
-            sns: user.provider,
             title: 'rollingpaper',
             user,
             papers,
             error,
-            message: req.query.message
+            message
         })
 
     } catch (err){
@@ -72,8 +71,9 @@ router.route('/new')
     })
 router.route('/:paper_id')
     .get(async (req, res) => {
-        const {master, edit} = req.query;
+        const {master, edit, error} = req.query;
         const {user_id, paper_id} = req.params;
+
         const paper = await Paper.findOne({
             where: { userId: user_id, paper_id: paper_id }
         });
@@ -99,15 +99,15 @@ router.route('/:paper_id')
         
         if (master) { // 계정주인이 접근할때
             if (req.isAuthenticated() && (req.user.user_id == user_id)){
-                return res.render('paper', {login: true, user_id, paper, posts, filter_words, error: req.query.error, master: true});
+                return res.render('paper', {login: true, user_id, paper, posts, filter_words, error, master: true});
             } else { //계정 주인이 아닌 사람이 접근할 때
                 const message = '접근 권한이 없습니다.';
                 return res.redirect(`/auth/login?loginError=${message}`);
             }
         } else if (edit) {  // edit URL로 들어왔을 때
-            return res.render('paper', {login: true, user_id, paper, posts, error: req.query.error, edit: true});
+            return res.render('paper', {login: true, user_id, paper, posts, error, edit: true});
         } else {  // 일반 url로 들어왔을 때(수정x)
-            return res.render('paper', {login: true, user_id, paper, posts});
+            return res.render('paper', {login: true, user_id, paper, error, posts});
         }
     })
     .post(async (req, res, next) => {
@@ -222,8 +222,6 @@ router.route('/:paper_id')
                         })
                     }
                 })
-                
-            
         }
     })
 router.post('/:paper_id/delete', isItMe, (req, res) => {

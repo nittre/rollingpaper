@@ -3,7 +3,7 @@ exports.isLoggedIn = (req, res, next) => {
         next();
     } else {
         const message = encodeURIComponent('로그인을 먼저 하셔야 합니다');
-        res.redirect(`/auth/login?loginError=${message}`);
+        res.redirect(`/auth/login?error=${message}`);
     }
 };
 
@@ -21,6 +21,6 @@ exports.isItMe = (req, res, next) => {
         next();
     } else {
         const message = encodeURIComponent('접근 권한이 없죠? ㅋㅋㄹㅃㅃ');
-        res.redirect(`/auth/login?loginError=${message}`);
+        res.redirect(`/auth/login?error=${message}`);
     }
 }

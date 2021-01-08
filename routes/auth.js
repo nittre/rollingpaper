@@ -8,7 +8,8 @@ const router = express.Router();
 
 router.route('/join')
     .get(isNotLoggedIn, (req, res) => {
-        res.render('join', {join: true, title: '회원가입', joinError: req.query.error});
+        const error = req.params.error;
+        res.render('join', {join: true, title: '회원가입', error});
     })
     .post(isNotLoggedIn, async (req, res) => {
         const {email, nickname, password} = req.body;
@@ -33,7 +34,8 @@ router.route('/join')
 
 router.route('/login')
     .get(isNotLoggedIn, (req, res, next) => {
-        res.render('main', {login: false, loginError: req.query.loginError});
+        const error = req.params.error
+        res.render('main', {login: false, error});
     })
     .post(isNotLoggedIn, (req, res, next) => {
         passport.authenticate('local', (authError, user, info) => {
@@ -42,7 +44,7 @@ router.route('/login')
                 return next(authError);
             }
             if (!user) {
-                return res.redirect(`/auth/login?loginError=${info.message}`);
+                return res.redirect(`/auth/login?error=${info.message}`);
             }
             return req.login(user, (loginError) => {
                 if (loginError) {
