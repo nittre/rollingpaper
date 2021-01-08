@@ -8,6 +8,13 @@ const dotenv = require('dotenv');
 const nunjucks = require('nunjucks');
 const CookieParser = require('cookie-parser');
 const { sequelize } = require('./models');
+const livereload = require('livereload');
+const livereloadMiddleware = require('connect-livereload');
+const liveserver = livereload.createServer({
+    exts: ['html', 'css', 'ejs'],
+    debug: false
+})
+liveserver.watch(__dirname);
 const passport = require('passport');
 const passportConfig = require('./passport');
 const {isLoggedIn, isNotLoggedIn} = require('./routes/middlewares');
@@ -51,7 +58,7 @@ sequelize.sync({force: false})
 
 app.use(passport.initialize());
 app.use(passport.session());
-
+app.use(livereloadMiddleware());
 
 app.use('/auth', authRouter);
 

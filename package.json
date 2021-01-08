@@ -4,7 +4,7 @@
   "description": "온라인 롤링페이퍼 서비스",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app"
+    "start": "nodemon --watch app --watch public/style/stylesheet.css"
   },
   "repository": {
     "type": "git",
@@ -18,10 +18,12 @@
   "homepage": "https://github.com/nittre/rollingpaper#readme",
   "dependencies": {
     "bcrypt": "^5.0.0",
+    "connect-livereload": "^0.6.1",
     "cookie-parser": "^1.4.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
+    "livereload": "^0.9.1",
     "morgan": "^1.10.0",
     "mysql2": "^2.2.5",
     "nunjucks": "^3.2.2",
