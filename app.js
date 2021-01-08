@@ -52,8 +52,19 @@ sequelize.sync({force: false})
 app.use(passport.initialize());
 app.use(passport.session());
 
+
 app.use('/auth', authRouter);
+
 app.use('/:user_id', mainRouter);
+
+app.use('/', (req, res, next)=> {
+    if(req.isAuthenticated()) {
+        return res.redirect(`/${req.user.user_id}`);
+    }
+    else {
+        return res.redirect('/auth/login');
+    }
+})
 
 app.listen(app.get('port'), () => {
     console.log(app.get('port'), '번 포트에서 대기중');
