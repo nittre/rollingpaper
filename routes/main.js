@@ -99,7 +99,7 @@ router.route('/:paper_id')
         
         if (master) { // 계정주인이 접근할때
             if (req.isAuthenticated() && (req.user.user_id == user_id)){
-                return res.render('paper', {login: true, user_id, paper, posts, filter_words, master: true});
+                return res.render('paper', {login: true, user_id, paper, posts, filter_words, error: req.query.error, master: true});
             } else { //계정 주인이 아닌 사람이 접근할 때
                 const message = '접근 권한이 없습니다.';
                 return res.redirect(`/auth/login?loginError=${message}`);
@@ -116,7 +116,10 @@ router.route('/:paper_id')
         if (filter) { 
             const words = req.body.words;
             const f_words = '%'+words+'%';
-            console.log(user_id);
+            if(words == '') {
+                const message = '빈 단어는 필터링 할 수 없습니다';
+                return res.redirect(`/${user_id}/${paper_id}?master=true&error=${message}`)
+            }
             await Filter.create({  //필터링 단어 추가
                 word: words,
                 userId: user_id

@@ -14,6 +14,9 @@
                 <li>{{word.word}}</li>
                 <form action="{{deleting_url}}" method="post"><button name='word_id' value={{word.id}}>삭제</button></form>
             {% endfor %}
+            {% if error %}
+                {{error}}
+            {% endif %}
             공유하기: {{share_url_edit}}
             <form action="{{delete_papaer_url}}" method='post'><button>롤링페이퍼 삭제</button></form>
             <ul>
