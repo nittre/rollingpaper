@@ -12,25 +12,26 @@ router.get('/', isLoggedIn, isItMe, async (req, res, next) => {
         const user = await User.findOne({
             where: {user_id: userId},
         });
-
-        await Paper.findAll({
+        const new_papers = await Paper.findAll({
             where: {
-                email: user.email
+                email: user.email,
+                sending: true
             }
         })
-            .then((papers) => {
-                papers.forEach((paper, i, arr) => {
-                    paper.sending = false;
-                    paper.userId = userId;
-                    paper.save();
-                });
-            })
-
-        const papers = await Paper.findAll({
+        
+        new_papers.forEach(async (paper, i, arr)=> {
+            paper.sending = false;
+            paper.userId = userId;
+            paper.save();
+        })
+        
+        const old_papers = await Paper.findAll({
                 where: {
                     userId: userId
                 },
-        });
+            })
+        
+        const papers = old_papers.concat(new_papers);
         
         res.render('main', {
             login: true,
@@ -40,6 +41,7 @@ router.get('/', isLoggedIn, isItMe, async (req, res, next) => {
             error,
             message
         })
+        
 
     } catch (err){
         console.error(err);
@@ -129,11 +131,14 @@ router.route('/:paper_id')
                     paper.userId = user.user_id;
                     paper.sender_id = user_id;
                     paper.sending = 0;
+                    paper.email = req.body.email;
+                    paper.sender_nick = req.user.nickname;
                     paper.save();
                 } else {
                     paper.sending = 1;
                     paper.sender_id = user_id;
                     paper.email = req.body.email;
+                    paper.sender_nick = req.user.nickname;
                     paper.save();
                 }
                 const message = '친구에게 보냈습니다';

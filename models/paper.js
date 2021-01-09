@@ -20,7 +20,11 @@ module.exports = class Paper extends Sequelize.Model{
             sending: {
                 type: Sequelize.BOOLEAN,
                 defaultValue: 0
-            }, 
+            },
+            sender_nick: {
+                type: Sequelize.STRING(20),
+                allowNull: true
+            }
         }, {
             sequelize,
             timestamps: true,
