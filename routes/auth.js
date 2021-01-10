@@ -35,7 +35,7 @@ router.route('/join')
 router.route('/login')
     .get(isNotLoggedIn, (req, res, next) => {
         const error = req.params.error
-        res.render('main', {login: false, error});
+        res.render('login', {login: false, error, title: 'Login'});
     })
     .post(isNotLoggedIn, (req, res, next) => {
         passport.authenticate('local', (authError, user, info) => {

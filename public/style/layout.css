@@ -1,0 +1,11 @@
+body {
+    margin: 15px;
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
+}
+
+.logo {
+    color: rgb(0, 168, 154);
+    margin: 10px;
+}

@@ -1,55 +1,121 @@
-{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="/style/paper.css">
+</head>
+<body>
+    {% if master %}
     <div class='paper__container'>
+        {% set back_url = '/' + user_id + '/' %}
+        <button class='back_btn'><a href={{back_url}}> « </a></button>
         <h2>{{paper.name}}</h2>
-        {% if master %}
-            {% set back_url = '/' + user_id + '/' %}
             {% set filter_url = "/" + user_id + "/" + paper.paper_id + "?filter=true" %}
             {% set deleting_url = "/" + user_id + "/" + paper.paper_id + "?deleting=true" %}
-            {% set share_url_edit = "/" + user_id + "/" + paper.paper_id + "?edit=true" %}
             {% set delete_papaer_url = "/" + user_id + "/" + paper.paper_id + "/delete" %}
-            {% set post_url = "/" + user_id + "/" + paper.paper_id + "/open_post" %}
-
-            <form action={{filter_url}} method='post'><input type="text" name='words' /><button>필터링하기</button></form>
-            필터링 단어
-            {% for word in filter_words %}
-                <li>{{word.word}}</li>
-                <form action="{{deleting_url}}" method="post"><button name='word_id' value={{word.id}}>삭제</button></form>
-            {% endfor %}
+            <div class="control">
+                <hr>
+                <div class='filter__container'>
+                    <form action={{filter_url}} method='post'><input class='filter_input' type="text" name='words' placeholder="필터링할 단어를 입력하세요"/><button class='filter_btn'>필터링하기</button></form>
+                    <ul class='filters'>
+                        {% for word in filter_words %}
+                            <li class='filter'>{{word.word}}<form action="{{deleting_url}}" method="post"><button name='word_id' value={{word.id}}>x</button></form></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="share__delete">
+                    <button class='share_btn' value={{share_url_edit}}>📤 공유하기</button>
+                    <form action="{{delete_papaer_url}}" method='post'><button class='delete_btn'>롤링페이퍼 삭제하기</button></form>
+                </div>
+                <hr>
+            </div>
             {% if error %}
-                {{error}}
+                <div class='error'>{{error}}</div>
             {% endif %}
-            공유하기: {{share_url_edit}}
-            <form action="{{delete_papaer_url}}" method='post'><button>롤링페이퍼 삭제</button></form>
-            <a href={{back_url}}> 이전으로 돌아가기 </a>
-            <ul>
+
+            <ul class='posts'>
                 {% for post in posts %}
-                    <li>{{post.text}}</li>
-                    <form action="{{deleting_url}}" method="post"><button name='post_id' value={{post.id}}>삭제</button></form>
-                    <form action="{{post_url}}" method="post"><button name='post_id' value={{post.id}}>포스트 보기</button></form>
+                    {% set post_url = "/" + user_id + "/" + paper.paper_id + "/" + post.id %}
+                    <li class='post'>
+                        <form action="{{deleting_url}}" method="post">
+                            <button name='post_id' value={{post.id}}>x</button>
+                        </form>
+                        <form action="{{post_url}}" method="post">
+                            <a href={{post_url}} name='post_id' value={{post.id}}>
+                                {{post.text | truncate(50, true, " ...")}}
+                            </a>
+                        </form>
+                    </li>
                 {% endfor %}
             </ul>
-        {% else %}
-            {% if edit %}
-                
-                <form action="{{share_url_edit}}" method="post">
-                    <input type='textarea' name="post" />
-                    <button>새 게시글 작성하기</button>
-                </form>
-            {% endif %}
-                {% if error %} {{error}} {% endif %}
-                <ul>
-                    {% for post in posts %}
-                        <li>{{post.text}}</li>
-                    {% endfor %}
-                </ul>
-        {% endif %}
-    </div>
+        </div>
+    {% elif editing %}
+        <div class='paper__container'>
+            {% set back_url = '/' + user_id + '/' + paper.paper_id + '?edit=true' %}
+            <button class='back_btn'><a href={{back_url}}> « </a></button>
+            <h2>{{paper.name}}</h2>
+                <div class="edit__container">
+                    {% set share_url_edit = "/" + user_id + "/" + paper.paper_id + "?editing=true" %}
+                    <form action="{{share_url_edit}}" method="post">
+                        <textarea name="post" cols="30" rows="10"></textarea>
+                        <button>새 게시글 작성하기</button>
+                    </form>
+                </div>
+                {% if error %}
+                    <div class='error'>{{error}}</div>
+                {% endif %}
+        </div>
+
+    {% elif edit %}
+        <div class='paper__container'>
+            <h2>{{paper.name}}</h2>
+            {% set new_url = '/' + user_id + '/' + paper.paper_id + '?editing=true' %}
+            <a class='new_post' href={{new_url}}>롤링페이퍼 작성하러 가기</a>
+            </form>
+            <ul class='posts'>
+                {% for post in posts %}
+                    {% set post_url = "/" + user_id + "/" + paper.paper_id + "/" + post.id %}
+                    <li class='post'>
+                        <form action="{{post_url}}" method="post">
+                            <a href={{post_url}} name='post_id' value={{post.id}}>
+                                {{post.text | truncate(50, true, " ...")}}
+                            </a>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <div class='paper__container'>
+            <h2>{{paper.name}}</h2>
+            <ul class='posts'>
+                {% for post in posts %}
+                    {% set post_url = "/" + user_id + "/" + paper.paper_id + "/" + post.id %}
+                    <li class='post'>
+                        <form action="{{post_url}}" method="post">
+                            <a href={{post_url}} name='post_id' value={{post.id}}>
+                                {{post.text | truncate(50, true, " ...")}}
+                            </a>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+        
     <script>
-        function copy_url() {
-            const share_url = document.querySelector('.share_btn');
-            share_url.select();
+        document.querySelector('.share_btn').addEventListener('click', function() {
+            let tempElem = document.createElement('textarea');
+            tempElem.value = event.target.value;
+            document.body.appendChild(tempElem);
+
+            tempElem.select();
             document.execCommand('copy');
-        }
-        document.querySelector('.share_btn').addEventListener('click', copy_url);
+            document.body.removeChild(tempElem);
+        })
     </script>
-{% endblock %}
+    
+</body>
+</html>

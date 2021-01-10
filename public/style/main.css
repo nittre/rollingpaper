@@ -1,0 +1,127 @@
+.user__container {
+    display: flex;
+    flex-flow: column wrap;
+    align-items: flex-end;
+    justify-content: center;
+    margin: 20px 0;
+
+    padding: 15px 30px;
+    border-radius: 30px;
+    width: 300px;
+    height: 150px;
+    background-color: #F0F0F0;
+}
+
+.user__container .email__nick {
+    display: flex;
+    flex-flow: column wrap;
+    align-items: flex-start;
+    margin: 20px 0 3px 0;
+}
+
+.email__nick .email__provider {
+    margin: 0;
+    font-size: 0.8rem;
+}
+
+.email__provider .email {
+    font-weight: bold;
+}
+
+.email__nick .nickname {
+    margin: 0;
+}
+
+.user__container .logout__btn {
+    border: 2px solid #00A89A;
+    border-radius: 20px;
+    background-color: transparent;
+    padding: 1px 7px;
+}
+
+.logout__btn:hover {
+    cursor: pointer;
+    background-color: #00A89A;
+    color:white;
+}
+
+.main__container {
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
+    margin: 20px 0 0 0;
+}
+
+.main__container .new {
+    background-color: rgb(255, 178, 36);
+    border: 0;
+    border-radius: 30px;
+    padding: 3px 10px;
+    width: 300px;
+    font-size: 1.1rem;
+    color: white;
+    font-weight: 500;
+
+}
+
+.main__container .new:hover {
+    cursor: pointer;
+}
+
+.main__container .error {
+    font-size: 0.8rem;
+    color: rgb(228, 79, 41);
+    font-weight: bold;
+}
+.main__container .message {
+    font-size: 0.8rem;
+    color: #009185;
+    margin: 15px 0 0 0;
+}
+.main__container > .papers {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    list-style-type: none;
+    margin: 10px 0;
+}
+
+.papers > .paper {
+    background-color: #f0f0f0;
+    border-radius: 20px;
+    width: 300px;
+    height: 100px;
+    margin: 10px;
+    padding: 10px 20px;
+}
+
+.paper .sender {
+    height: 20px;
+    font-size: 0.8rem;
+}
+.paper a {
+    text-decoration: none;
+    color: black;
+    font-weight: 500;
+    font-size: 1.1rem;
+}
+
+.paper .send {
+    margin: 10px 0 0 0;
+}
+
+.send input {
+    border: 0;
+    background-color: transparent;
+    background: 
+      linear-gradient(rgb(46, 46, 46), rgb(46, 46, 46)) center bottom 0px /calc(100%) 1.5px no-repeat;
+}
+.send button {
+    margin-left: 3px;
+    padding: 1.5px 5px;
+    background-color: rgb(46, 46, 46);
+    border: 2px rgb(46, 46, 46) solid;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+}

@@ -1,0 +1,100 @@
+.login__container {
+     display: flex;
+     margin: 10px;
+     flex-flow: column wrap;
+}
+
+.login__container .login {
+     display: flex;
+     flex-flow: column wrap;
+     margin: 10px 10px 8px 10px;
+     padding: 8px 0 0 0;
+     align-items: center;
+}
+
+.login .inputs {
+     display: flex;
+     flex-flow: column wrap;
+}
+.inputs .email,
+.inputs .password {
+     width:  250px;
+     height: 30px;
+     margin: 3px 0 3px 0;
+}
+
+.login button {
+     width: 260px;
+     height: 30px;
+     padding:0;
+     margin: 3px 0;
+}
+
+.login__container .snslogin {
+     display: flex;
+     flex-flow: column wrap;
+     align-items: center;
+}
+
+hr {
+     width: 100%
+}
+
+.snslogin .sns {
+     display: flex;
+     flex-flow: column wrap;
+     justify-content: center;
+     align-items: flex-start;
+     margin: 3px 0;
+}
+
+.sns > form {
+     margin: 2px 0;
+}
+.sns > form > button {
+     background-color: transparent;
+     border: 0;
+     border-radius: 10px;
+     font-size: 14px;
+}
+
+.sns > form > button:hover {
+     text-decoration: underline;
+     cursor:pointer;
+}
+
+.kakao__btn{
+     color: #e4ce08;
+     font-weight: bolder;
+}
+.twitter__btn{
+     color: #1DA1F3;
+     font-weight: bolder;
+}
+.facebook__btn{
+     color: #4761A2;
+     font-weight: bolder;
+}
+.sns >form> button > img {
+     width: 15px;
+     height: 15px;
+}
+
+.join {
+     display: flex;
+     flex-flow: row wrap;
+     justify-content: center;
+}
+.join > a{
+     text-decoration: none;
+     color: black;
+}
+
+.join > a {
+     color: #00A89A;
+     font-weight: bolder;
+}
+
+.join > a:hover {
+     text-decoration: underline;
+}

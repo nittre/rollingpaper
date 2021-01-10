@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+
+{% block login %}
+    <div class="login__container">
+        <form action="/auth/login" method="post" class='login'>
+            <div class='inputs'>
+                <input type="text" class='email' name='email' placeholder='이메일을 입력하세요' />
+                <input type="password" class='password' name='password' placeholder='비밀번호를 입력하세요' />
+            </div>
+            <button>로그인</button>
+        </form>
+        {% if error %}
+            <p>{{error}}</p>
+        {% endif %}
+        <hr>
+        <div class="snslogin">
+            소셜 로그인 하기
+            <div class="sns">
+                <form action="/auth/kakao" method="get"><button class='kakao__btn'><img src="/images/kakaotalk.jpg" alt="kakaotalk login" > 카카오톡으로 로그인</button></form>
+                <form action="/auth/twitter" method="get"><button class='twitter__btn'><img src="/images/twitter.jpg" alt="twitter login" > 트위터로 로그인</button></form>
+                <form action="/auth/facebook" method="get"><button class='facebook__btn'><img src="/images/facebook.png" alt="facebook login" > 페이스북으로 로그인</button></form>    
+            </div>
+        </div>
+        <hr>
+        <div class="join">
+            계정이 없으신가요?
+            <a href="/auth/join">
+                &nbsp;&nbsp;가입하기
+            </a>
+        </div>
+    </div>
+{% endblock %}

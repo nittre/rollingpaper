@@ -1,30 +1,45 @@
 {% extends "layout.html" %}
 
-{% block content %}
+{% block main %}
+    <div class='user__container'>
+        <div class="email__nick">
+            <p class='email__provider'><span class='email'>{{user.email}}</span> {% if user.provider %} from <span class='provider'>{{user.provider}}</span> {% endif %}</p>
+            <h1 class='nickname'>{{user.nickname}}님, 어서오세요!</h1>
+        </div>
+        <form action="/auth/logout" method='get'><button class='logout__btn'>로그아웃</button></form>
+    </div>
     <div class='main__container'>
-        {% if error %} {{error}} {% endif %}
         {% set new_url = "/" + user.user_id + "/new" %}
-        <form action="{{new_url}}" method='get'><button>new</button></form>
-        <ul>
-            
-            
+        <form action="{{new_url}}" method='get'><button class='new'>새 롤링페이퍼 만들기</button></form>
+        {% if error %}
+            <div class='error'>{{error}}</div> 
+        {% endif %}
+        {% if message %}
+            <div class='message'>
+                {{message}}
+            </div>
+        {% endif %}
+        <ul class='papers'>
             {% for paper in papers %}
-                {% set send_url = '/' + user.user_id + '/' + paper.paper_id + '?send=true' %}
-                {% set url = '/' + user.user_id + '/' + paper.paper_id + '?master=true' %}
-                <li><a href="{{url}}">{{paper.name}}</a></li>
-                {% if paper.sender_id == null %}
-                    <form action={{send_url}} method="post">
-                        <input type="email" name='email' />
-                        <button>친구에게 보내기</button>
-                    </form>
-                {% endif %}
-                {% if paper.sender %}
-                    {{paper.sender}}님이 보냄
+                {% if paper.sending != 1 %}
+                    {% set send_url = '/' + user.user_id + '/' + paper.paper_id + '?send=true' %}
+                    {% set url = '/' + user.user_id + '/' + paper.paper_id + '?master=true' %}
+                    <li class='paper'>
+                        <div class='sender'>
+                        {% if paper.sender_nick %}
+                            <strong>{{paper.sender_nick}}</strong>님이 보냄
+                        {% endif %}
+                        </div>
+                        <a href="{{url}}">{{paper.name}}</a>
+                        {% if paper.sender_id == null %}
+                        <form action={{send_url}} method="post" class='send'>
+                            <input type="email" name='email' placeholder="&nbsp;친구의 이메일을 입력하세요" />
+                            <button>send</button>
+                        </form>
+                        {% endif %}
+                    </li>
                 {% endif %}
             {% endfor %}
-            {% if message %}
-                {{message}}
-            {% endif %}
         </ul>
     </div>
 {% endblock %}

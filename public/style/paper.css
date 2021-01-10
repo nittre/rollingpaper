@@ -1,0 +1,205 @@
+body {
+    margin: 15px;
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
+}
+hr {
+    width: 100%;
+}
+.paper__container {
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
+}
+h2 {
+    color: black;
+    margin: 10px;
+    font-size: 2rem;
+}
+.paper__container .back_btn {
+    height: 40px;
+    top: 10px;
+    left: 20px;
+    align-self: flex-start;
+    background: transparent;
+    border: 0;
+}
+.back_btn a {
+    text-decoration: none;
+    color:rgb(255, 178, 36);
+    font-size: 40px;
+}
+.paper__container .control {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+.control .filter__container {
+    display: flex;
+    flex-flow: column wrap;
+    max-width: 280px;
+}
+
+.filter__container .filter_input {
+    border: 0;
+    background-color: transparent;
+    background: 
+      linear-gradient(rgb(46, 46, 46), rgb(46, 46, 46)) center bottom 0px /calc(100% - 10px) 1.5px no-repeat;
+}
+
+.filter__container .filter_btn {
+    margin-left: 3px;
+    padding: 1.5px 5px;
+    background-color: rgb(46, 46, 46);
+    border: 2px rgb(46, 46, 46) solid;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+}
+
+.filter__container .filters {
+    display: flex;
+    flex-flow: row wrap;
+    list-style-type: none;
+    margin: 10px 0;
+    padding: 0;
+}
+
+.filters .filter {
+    display: flex;
+    flex-flow: row wrap;
+    margin: 0 3px 1.8px 3px;
+    
+    font-size: 0.8rem;
+    background-color:rgb(119, 119, 119);
+    border-radius: 30px;
+    padding: 1px 9px;
+    color: white;
+    font-weight: 500;
+}
+
+.filter button {
+    border: 0;
+    background-color: transparent;
+    cursor: pointer;
+    padding: 0;
+    padding-left: 8px;
+    color: rgb(255, 178, 36);
+    font-weight: bold;
+}
+
+.paper__container .share__delete{
+    display: flex;
+    flex-flow: column wrap;
+    align-items: baseline;
+    margin: 0 0 0 20px;
+}
+
+.share__delete .share_btn {
+    width: auto;
+    height: 29px;
+    margin: 0 0 8px 0;
+    padding: 2.5px 5px;
+    background-color: rgb(46, 46, 46);
+    border: 2px rgb(46, 46, 46) solid;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+}
+
+.share__delete .delete_btn {
+    width: auto;
+    height: 29px;
+    padding: 1.5px 5px;
+    background-color: rgb(218, 0, 0);
+    border: 2px rgb(218,0,0) solid;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+}
+
+.paper__container .error {
+    font-size: 0.8rem;
+    color: rgb(228, 79, 41);
+    font-weight: bold;
+}
+
+.paper__container .posts {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    max-width:800px;
+    margin: 20px;
+    padding: 0;
+
+    list-style-type: none;
+}
+
+.posts .post {
+    display: flex;
+    flex-flow: column wrap;
+    align-items: flex-start;
+
+    width: 150px;
+    height: auto;
+    margin: 10px 15px;
+    padding: 10px 15px 15px 15px;
+    border-radius: 20px;
+
+    background-color: #F0F0F0;
+}
+
+.post button {
+    border: 0;
+    color:rgb(228, 79, 41);
+    cursor: pointer;
+    margin: 0 0 3px 140px;
+}
+
+.post a {
+    text-decoration: none;
+    color: black;
+}
+
+.paper__container .edit__container {
+    padding: 20px;
+    border-radius: 20px;
+    background-color: #f0f0f0;
+}
+
+.edit__container form {
+    display: flex;
+    flex-flow: column wrap;
+    align-items: flex-end;
+}
+.edit__container textarea {
+    width: 300px;
+    height: 200px;
+    margin: 0 0 10px 0;
+}
+
+.edit__container button{
+    width: auto;
+    height: 29px;
+    margin: 0 0 8px 0;
+    padding: 2.5px 5px;
+    background-color: rgb(46, 46, 46);
+    border: 2px rgb(46, 46, 46) solid;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+}
+.paper__container .new_post {
+    text-decoration: none;
+    background-color: rgb(255, 178, 36);
+    border: 0;
+    border-radius: 30px;
+    margin: 15px 0 10px 0;
+    padding: 4px 25px;
+    font-size: 1.1rem;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+}

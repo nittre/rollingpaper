@@ -73,7 +73,7 @@ router.route('/new')
     })
 router.route('/:paper_id')
     .get(async (req, res) => {
-        const {master, edit, error} = req.query;
+        const {master, edit, error, editing} = req.query;
         const {user_id, paper_id} = req.params;
 
         const paper = await Paper.findOne({
@@ -108,13 +108,15 @@ router.route('/:paper_id')
             }
         } else if (edit) {  // edit URL로 들어왔을 때
             return res.render('paper', {login: true, user_id, paper, posts, error, edit: true});
+        } else if (editing) {  // edit URL로 들어왔을 때
+            return res.render('paper', {login: true, user_id, paper, posts, error, editing: true});
         } else {  // 일반 url로 들어왔을 때(수정x)
             return res.render('paper', {login: true, user_id, paper, error, posts});
         }
     })
     .post(async (req, res, next) => {
         const {user_id, paper_id} = req.params;
-        const {filter, deleting, edit, send} = req.query;
+        const {filter, deleting, editing, send} = req.query;
         if (send) {
             const paper = await Paper.findOne({
                 where: {
@@ -141,7 +143,7 @@ router.route('/:paper_id')
                     paper.sender_nick = req.user.nickname;
                     paper.save();
                 }
-                const message = '친구에게 보냈습니다';
+                const message = paper.email + '에게 롤링페이퍼를 보냈습니다';
                 return res.redirect(`/${user_id}?message=${message}`);
             })
         }
@@ -194,7 +196,7 @@ router.route('/:paper_id')
                 return res.redirect(`/${user_id}/${paper_id}?master=true`);
             }
         }
-        if (edit) {
+        if (editing) {
             const text = req.body.post;
             let f_word = '';
             await Filter.findAll({where: {userId: user_id}, attributes: ['word']})
@@ -209,7 +211,7 @@ router.route('/:paper_id')
                 .then(async () => {
                     if(f_word != '') {
                         const message = f_word+'는 사용할 수 없는 단어입니다.'
-                        return res.redirect(`/${req.params.user_id}/${req.params.paper_id}?edit=true&error=${message}`);
+                        return res.redirect(`/${req.params.user_id}/${req.params.paper_id}?editing=true&error=${message}`);
                     }
                     else {
                         await Post.create({
@@ -223,7 +225,7 @@ router.route('/:paper_id')
                         .catch((err) => {
                             console.error(err);
                             const message = '롤링페이퍼를 작성할 수 없습니다';
-                            return res.redirect(`/${user_id}/${paper_id}?edit=true?error=${message}`);
+                            return res.redirect(`/${user_id}/${paper_id}?editing=true?error=${message}`);
                         })
                     }
                 })
@@ -240,9 +242,6 @@ router.post('/:paper_id/delete', isItMe, (req, res) => {
     })
 })
 
-router.post('/:paper_id/open_post', (req, res) => {
-    res.redirect(`/${req.params.user_id}/${req.params.paper_id}/${req.body.post_id}`);
-})
 router.get('/:paper_id/:post_id', (req, res) => {
     const {user_id, paper_id, post_id} = req.params;
     Post.findOne({where: {show: 1, posts: paper_id, id: post_id}})

@@ -4,32 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{title}}</title>
+    <link rel="stylesheet" href="/style/layout.css">
+    <link rel="stylesheet" href="/style/login.css">
+    <link rel="stylesheet" href="/style/main.css">
 </head>
 <body>
-    {% if login == true %}
-        <div class='user__container'>
-            <h4>{{user.email}} {% if sns %} - {{sns}} {% endif %}</h4>
-            <h1>{{user.nickname}}님, 어서오세요!</h1>
-            <form action="/auth/logout" method='get'><button>logout</button></form>
-        </div>
-        {% block content %}{% endblock %}
+    <h1 class="logo">
+        Rolling Paper
+    </h1>
+    {% if login %}
+        {% block main %}{% endblock %}
     {% elif join %}
         {% block join %}{% endblock %}
     {% else %}
-        <div class="login__container">
-            <form action="/auth/login" method="post">
-                <input type="text" class='email' name='email' />
-                <input type="password" class='password' name='password' />
-                <button>login</button>
-            </form>
-            <p>{{loginError}}</p>
-            <form action="/auth/kakao" method="get"><button>kakao</button></form>
-            <form action="/auth/twitter" method="get"><button>twitter</button></form>
-            <form action="/auth/facebook" method="get"><button>facebook</button></form>
-            <a href="/auth/join">
-                <button>join</button>
-            </a>
-        </div>
+        {% block login %}{% endblock %}
     {% endif %}
     
 </body>
